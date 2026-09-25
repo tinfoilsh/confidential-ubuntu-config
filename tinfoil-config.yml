@@ -1,0 +1,50 @@
+cvm-version: 0.14.10
+cpus: 120
+memory: 1048576
+gpus: 8
+
+cvm-network:
+  inbound-ports: [22]
+
+attested-keys:
+  - id: host-ssh
+    key: ecdsa-p256
+  - id: teleport-join
+    key: ed25519
+
+networks:
+  dev:
+    egress: open
+
+volumes:
+  - name: workspace
+    exec: true
+
+containers:
+  - name: "workspace"
+    image: "ghcr.io/tinfoilsh/confidential-ubuntu-private@sha256:f4153f0c4e1eceaefe4f1dc0516c642e07392fd4496d39de7c97ccf84a25348d"
+    runtime: nvidia
+    gpus: all
+    restart: on-failure
+    cvm_admin: true
+    stop_signal: SIGRTMIN+3
+    stop_timeout: 120
+    networks: [dev]
+    volumes: [workspace:/mnt/disk]
+    keys: [host-ssh, teleport-join]
+
+    ports: ["22:22"]
+
+    tmpfs:
+      /run: "rw,nosuid,nodev,mode=755"
+
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+shim:
+  upstream-port: 22
+  authenticated: false

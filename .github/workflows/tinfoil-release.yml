@@ -1,0 +1,24 @@
+name: Measure and publish
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: tinfoil-config-release-${{ github.ref_name }}
+
+jobs:
+  measure-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Measure and publish the deployment
+        uses: tinfoilsh/measure-image-action@cb61fb5c942ae2d99a9316ada725122bd52faccd # v0.13.0
+        with:
+          config-file: ${{ github.workspace }}/tinfoil-config.yml
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mark-as-latest: "true"
