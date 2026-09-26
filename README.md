@@ -1,6 +1,6 @@
 # Confidential Ubuntu configuration
 
-Public deployment configuration for Tinfoil's private Ubuntu sandbox image.
+Public deployment configuration for Tinfoil's Ubuntu sandbox image.
 Each release pins an immutable image digest and publishes its measured deployment.
 Image source and bootstrap SSH authorization stay in the private image repository.
 
@@ -41,8 +41,7 @@ For a new blank disk, generate `workspace.key` once with
 `openssl rand -out workspace.key 64` before unlocking. For an existing disk,
 use its original key file. Reuse that key after relaunch and refresh the attested
 SSH profile before reconnecting. Keep the key while retaining the persistent disk.
-The customer enrollment tool can automate disk unlock and Teleport joining with
-AWS Secrets Manager and the customer's Teleport settings.
+The Tinfoil enrollment tool can automate disk unlock and SSH joining.
 
 See the [CLI documentation](https://docs.tinfoil.sh/containers/cli),
 [attested SSH guide](https://docs.tinfoil.sh/containers/attested-ssh), and
@@ -55,6 +54,3 @@ Build and publish the image from the private source repository. Update the
 The release workflow measures the configuration and publishes its signed
 deployment artifacts. It does not build or pull the workload image and needs no
 private-image credentials.
-
-Keep GHCR package permissions linked to the private source repository. This
-public repository contains no bootstrap authorized keys or registry credentials.
