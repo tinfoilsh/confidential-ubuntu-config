@@ -22,8 +22,6 @@ volumes:
 containers:
   - name: "workspace"
     image: "ghcr.io/tinfoilsh/confidential-ubuntu-private@sha256:226300bc2a60c1b6642753e4a7be6d5e90a45a6292d5adc7685cfc62f6608f46"
-    runtime: nvidia
-    gpus: all
     restart: on-failure
     cvm_admin: true
     stop_signal: SIGRTMIN+3
